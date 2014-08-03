@@ -1,2 +1,2 @@
-angular-skeleton
+weekly-pga-pool
 ================
