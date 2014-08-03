@@ -11,9 +11,21 @@ angular.module('app')
 		var leaderboard = [];
 		
 		data.$loaded().then(function () {
+//			var tourneyStatus = ExtractTourneyStatus(data);
+//			$scope.tourneyStatus = tourneyStatus;
+//			console.log(tourneyStatus);			
+//			
+//			var leaderboard = ExtractLeaderboard(data);
+//			$scope.leaderboard = leaderboard;
+//			console.log(leaderboard);
+		});
+		
+		data.$watch(function (event) {
+			if (event.key !== 'leaderboard') { return; }
+			
 			var tourneyStatus = ExtractTourneyStatus(data);
 			$scope.tourneyStatus = tourneyStatus;
-			console.log(tourneyStatus);			
+			console.log(tourneyStatus);
 			
 			var leaderboard = ExtractLeaderboard(data);
 			$scope.leaderboard = leaderboard;
@@ -21,16 +33,17 @@ angular.module('app')
 		});
 		
 		$scope.roundStatusDisplay = function () {
-			if ($scope.tourneyStatus === undefined) return '';
-			if ($scope.tourneyStatus.round_state == 'Official') {
-				return 'Round ' + $scope.tourneyStatus.current_round + ' (completed)';	
+			if ($scope.tourneyStatus === undefined) { return ''; }
+			if ($scope.tourneyStatus.round_state === 'Official') {
+				return 'Round ' + $scope.tourneyStatus.current_round + ' (completed)';
 			} else {
 				return 'Round ' + $scope.tourneyStatus.current_round + ' (updated ' + $filter('date')($scope.tourneyStatus.last_updated, 'hh:mm a') + ' local event time)';
-			};
-		}
+			}
+		};
 		
 		function ExtractTourneyStatus (data) {
 			var statusData = data[data.$indexFor('leaderboard')];
+			if (statusData === undefined) { return ''; }
 			var status = {
 				"tournament_name": statusData.tournament_name,
 				"current_round": statusData.current_round,
@@ -45,7 +58,9 @@ angular.module('app')
 		}
 		
 		function ExtractLeaderboard (data) {
-			var players = data[data.$indexFor('leaderboard')].players;
+			var players = data[data.$indexFor('leaderboard')];
+			if (players === undefined) { return ''; }
+			players = players.players;
 			var leaderboard = _.map(players, function (player) {
 				return {
 					"name": player.player_bio.first_name + ' ' + player.player_bio.last_name,
