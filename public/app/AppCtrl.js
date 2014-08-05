@@ -10,72 +10,47 @@ angular.module('app')
 		var data = sync.$asArray();
 		var leaderboard = [];
 		
-		data.$loaded().then(function () {
-//			var tourneyStatus = ExtractTourneyStatus(data);
-//			$scope.tourneyStatus = tourneyStatus;
-//			console.log(tourneyStatus);			
-//			
-//			var leaderboard = ExtractLeaderboard(data);
-//			$scope.leaderboard = leaderboard;
-//			console.log(leaderboard);
-		});
-		
-		data.$watch(function (event) {
-			if (event.key !== 'leaderboard') { return; }
-			
-			var tourneyStatus = ExtractTourneyStatus(data);
-			$scope.tourneyStatus = tourneyStatus;
-			console.log(tourneyStatus);
-			
-			var leaderboard = ExtractLeaderboard(data);
-			$scope.leaderboard = leaderboard;
-			console.log(leaderboard);
+		data.$loaded().then(function() {
+			console.log(data);
+			$scope.tourneyStatus = ExtractTourneyStatus(data);
+			$scope.leaderboard = ExtractLeaderboard(data);
+			data.$watch(function (event) {
+				console.log(event);
+				$scope.tourneyStatus = ExtractTourneyStatus(data);
+				$scope.leaderboard = ExtractLeaderboard(data);
+			});
 		});
 		
 		$scope.roundStatusDisplay = function () {
 			if ($scope.tourneyStatus === undefined) { return ''; }
-			if ($scope.tourneyStatus.round_state === 'Official') {
+			if (Object.keys($scope.tourneyStatus).length !== 8) {return ''; }
+			if ($scope.tourneyStatus.is_finished) {
+				return 'Final Results';
+			} else if (!$scope.tourneyStatus.is_started) {
+				return 'Tournament Has Not Yet Started';
+			} else if ($scope.tourneyStatus.round_state === 'Official') {
 				return 'Round ' + $scope.tourneyStatus.current_round + ' (completed)';
 			} else {
 				return 'Round ' + $scope.tourneyStatus.current_round + ' (updated ' + $filter('date')($scope.tourneyStatus.last_updated, 'hh:mm a') + ' local event time)';
 			}
 		};
 		
-		function ExtractTourneyStatus (data) {
-			var statusData = data[data.$indexFor('leaderboard')];
-			if (statusData === undefined) { return ''; }
-			var status = {
-				"tournament_name": statusData.tournament_name,
-				"current_round": statusData.current_round,
-				"round_state": statusData.round_state,
-				"start_date": statusData.start_date,
-				"end_date": statusData.end_date,
-				"is_started": statusData.is_started,
-				"is_finished": statusData.is_finished
-			};
+		function ExtractTourneyStatus(data) {
+			var status = {};
 			status.last_updated = data[data.$indexFor('last_updated')].$value;
+			status.tournament_name = data[data.$indexFor('tournament_name')].$value;
+			status.current_round = data[data.$indexFor('current_round')].$value;
+			status.round_state = data[data.$indexFor('round_state')].$value;
+			status.start_date = data[data.$indexFor('start_date')].$value;
+			status.end_date = data[data.$indexFor('end_date')].$value;
+			status.is_started = data[data.$indexFor('is_started')].$value;
+			status.is_finished = data[data.$indexFor('is_finished')].$value;
 			return status;
 		}
 		
-		function ExtractLeaderboard (data) {
-			var players = data[data.$indexFor('leaderboard')];
-			if (players === undefined) { return ''; }
-			players = players.players;
-			var leaderboard = _.map(players, function (player) {
-				return {
-					"name": player.player_bio.first_name + ' ' + player.player_bio.last_name,
-					"player_id": player.player_id,
-					"current_position": player.current_position,
-					"total_strokes": player.total_strokes,
-					"thru": player.thru,
-					"today": player.today,
-					"total": player.total,
-					"money_event": player.rankings.projected_money_event
-				};
-			});
-			return leaderboard;
+		function ExtractLeaderboard(data) {
+			return data[data.$indexFor('leaderboard')];
 		}
 
-		
 	}]);
 		

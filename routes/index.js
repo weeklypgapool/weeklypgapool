@@ -4,5 +4,5 @@
  */
 
 exports.index = function(req, res){
-  res.render('index', { title: 'Angular Skeleton' });
+  res.render('index', { title: 'Weekly PGA Pool' });
 };
