@@ -1,16 +1,19 @@
 'use strict';
 
-angular.module('app', ['ui.router', 'app.common', 'app.data', 'app.home', 'firebase'])
+angular.module('app', ['ui.router', 'firebase'])
 	.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
 		$stateProvider
-			.state('home', {
-				url: '/home',
-				templateUrl: 'app/home/home.html',
-				controller: 'HomeCtrl'
+			.state('leaderboard', {
+				url: '/leaderboard',
+				templateUrl: 'app/leaderboard/leaderboard.html',
+				controller: 'leaderboardCtrl'
+			})
+			.state('pool', {
+				url: '/pool',
+				templateUrl: 'app/pool/pool.html'
 			});
-
-		$urlRouterProvider.otherwise('/home');
+		$urlRouterProvider.otherwise('/leaderboard');
 
 	}])
 

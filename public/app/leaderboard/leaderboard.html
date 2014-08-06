@@ -1,0 +1,31 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="panel-title"><h5>{{tourneyStats.tournament_name}}<br><small>LEADERBOARD - {{roundStatusDisplay()}}</small></h5></div>
+  </div>
+  <div class="panel-body">
+    <div class="table-responsive">
+  		<table class="table table-condensed table-striped">
+				<thead>
+					<th class="text-center">Pos</th>
+					<th>Player</th>
+					<th class="text-center">Total</th>
+					<th class="text-center">Rd {{tourneyStats.current_round}}</th>
+					<th class="text-center">Thru</th>
+					<th class="text-center">Money</th>
+				</thead>
+				<tbody>
+					<tr ng-repeat="player in leaderboard">
+						<td class="text-center">{{player.current_position}}</td>
+						<td>{{player.name}}</td>
+						<td class="text-center">{{player.total}}</td>
+						<td class="text-center">{{player.today | ZeroToE}}</td>
+						<td class="text-center">{{player.thru}}</td>
+						<td class="text-center">{{player.money_event | number:0}}</td>
+					</tr>
+				</tbody>
+  		</table>
+		</div>
+  </div>
+</div>
+
+

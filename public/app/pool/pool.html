@@ -1,0 +1,10 @@
+<h4>{{tourneyStats.tournament_name}}<br><small>POOL STANDINGS - {{roundStatusDisplay()}}</small></h4>
+
+<div class="panel panel-default" ng-repeat="part in participants | orderBy:'-total_money'">
+	<div class="panel-heading">
+		<h4>{{part.$id}}<span class="pull-right bg-success participant-money">${{part.total_money | number:0}}</span></h4>
+	</div>
+	<div class="panel-body">
+		<div class="bg-info player-name" ng-repeat="(name, val) in part.players">{{name}} - ${{lookupMoney(name) | number:0}}</div>
+	</div>
+</div>

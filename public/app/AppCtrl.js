@@ -1,56 +1,75 @@
 'use strict';
 
 angular.module('app')
-	.controller('AppCtrl', ['$scope', '$firebase', '$filter', function ($scope, $firebase, $filter) {
+	.controller('appCtrl', ['$rootScope', '$scope', '$location', '$firebase', function ($rootScope, $scope, $location, $firebase) {
 
-    var ref = new Firebase("https://weeklypgapool.firebaseio.com/tournaments/current/data");
-
-    // create an AngularFire reference to the data
-    var sync = $firebase(ref);
-		var data = sync.$asArray();
-		var leaderboard = [];
+		var refStats = new Firebase("https://weeklypgapool.firebaseio.com/tournaments/current/data/stats");
+		var refLeaderboard = new Firebase("https://weeklypgapool.firebaseio.com/tournaments/current/data/leaderboard");
+		var refParticipants = new Firebase("https://weeklypgapool.firebaseio.com/tournaments/current/participants");
+		var syncStats = $firebase(refStats);
+		var syncLeaderboard = $firebase(refLeaderboard);
+		var syncParticipants = $firebase(refParticipants);
+		$rootScope.tourneyStats = syncStats.$asObject();
+		$rootScope.leaderboard = syncLeaderboard.$asArray();
+		$rootScope.participants = syncParticipants.$asArray();
 		
-		data.$loaded().then(function() {
-			console.log(data);
-			$scope.tourneyStatus = ExtractTourneyStatus(data);
-			$scope.leaderboard = ExtractLeaderboard(data);
-			data.$watch(function (event) {
-				console.log(event);
-				$scope.tourneyStatus = ExtractTourneyStatus(data);
-				$scope.leaderboard = ExtractLeaderboard(data);
+		// Build player list
+		$rootScope.leaderboard.$loaded().then(function () {
+			$rootScope.playerList = _($rootScope.leaderboard).pluck('name').sort().value();
+			// Compute total money
+			$rootScope.participants.$loaded().then(function () {
+				_($rootScope.participants).forEach(function (participant, idx) {
+					var sumMoney = 0;
+					_(participant.players).forEach(function (val, name) {
+						sumMoney += $scope.lookupMoney(name);
+					});
+					participant.total_money = sumMoney;
+				});
+			});
+			$rootScope.leaderboard.$watch(function (evt) {
+				var playerName = $rootScope.leaderboard[evt.key].name;
+				// Recalc each participant with player
+				_.forEach($rootScope.participants, function (participant, idx) {
+					if (participant.players[playerName]) {
+						var sumMoney = 0;
+						_(participant.players).forEach(function (val, name) {
+							sumMoney += $scope.lookupMoney(name);
+						});
+						participant.total_money = sumMoney;
+					}
+				});
 			});
 		});
-		
+
 		$scope.roundStatusDisplay = function () {
-			if ($scope.tourneyStatus === undefined) { return ''; }
-			if (Object.keys($scope.tourneyStatus).length !== 8) {return ''; }
-			if ($scope.tourneyStatus.is_finished) {
+			if ($rootScope.tourneyStats === undefined) { return ''; }
+			if ($rootScope.tourneyStats.is_finished) {
 				return 'Final Results';
-			} else if (!$scope.tourneyStatus.is_started) {
+			} else if (!$rootScope.tourneyStats.is_started) {
 				return 'Tournament Has Not Yet Started';
-			} else if ($scope.tourneyStatus.round_state === 'Official') {
-				return 'Round ' + $scope.tourneyStatus.current_round + ' (completed)';
+			} else if ($rootScope.tourneyStats.round_state === 'Official') {
+				return 'Round ' + $rootScope.tourneyStats.current_round + ' (completed)';
 			} else {
-				return 'Round ' + $scope.tourneyStatus.current_round + ' (updated ' + $filter('date')($scope.tourneyStatus.last_updated, 'hh:mm a') + ' local event time)';
+				return 'Round ' + $rootScope.tourneyStats.current_round + ' as of ' + $filter('date')($rootScope.tourneyStats.last_updated, 'hh:mm a') + ' local event time (updates automatically)';
 			}
 		};
 		
-		function ExtractTourneyStatus(data) {
-			var status = {};
-			status.last_updated = data[data.$indexFor('last_updated')].$value;
-			status.tournament_name = data[data.$indexFor('tournament_name')].$value;
-			status.current_round = data[data.$indexFor('current_round')].$value;
-			status.round_state = data[data.$indexFor('round_state')].$value;
-			status.start_date = data[data.$indexFor('start_date')].$value;
-			status.end_date = data[data.$indexFor('end_date')].$value;
-			status.is_started = data[data.$indexFor('is_started')].$value;
-			status.is_finished = data[data.$indexFor('is_finished')].$value;
-			return status;
-		}
+		$scope.getBtnClass = function (path) {
+			if ($location.path().substr(0, path.length) === path) {
+				return "btn-primary";
+			} else {
+				return "";
+			}
+		};
 		
-		function ExtractLeaderboard(data) {
-			return data[data.$indexFor('leaderboard')];
-		}
-
+		$scope.lookupMoney = function (playerName) {
+			return _.find($rootScope.leaderboard, {'name': playerName}).money_event;
+		};
+		
+		// Participant Factory Override to add SumMoney property
+//		var ParticipantFactory = $FirebaseObject.$extendFactory({/* stuff in here */});
+//		$rootScope.participants = 
+		
 	}]);
-		
+
+	
