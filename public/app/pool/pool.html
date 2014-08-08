@@ -1,4 +1,4 @@
-<h4>{{tourneyStats.tournament_name}}<br><small>POOL STANDINGS - {{roundStatusDisplay()}}</small></h4>
+<h4>{{tourneyStats.tournament_name}}<br><small>POOL STANDINGS - {{roundStatusDisplay()}}<span class="pull-right">(updates are automatic)</span></small></h4>
 
 <div class="panel panel-default" ng-repeat="part in participants | orderBy:'-total_money'">
 	<div class="panel-heading">

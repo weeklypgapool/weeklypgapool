@@ -18,7 +18,7 @@ angular.module('app', ['ui.router', 'firebase'])
 				templateUrl: 'app/admin/admin.html',
 				controller: 'adminCtrl'
 			});
-		$urlRouterProvider.otherwise('/leaderboard');
+		$urlRouterProvider.otherwise('/pool');
 
 	}])
 
