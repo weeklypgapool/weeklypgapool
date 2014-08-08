@@ -12,6 +12,11 @@ angular.module('app', ['ui.router', 'firebase'])
 			.state('pool', {
 				url: '/pool',
 				templateUrl: 'app/pool/pool.html'
+			})
+			.state('admin', {
+				url: '/admin',
+				templateUrl: 'app/admin/admin.html',
+				controller: 'adminCtrl'
 			});
 		$urlRouterProvider.otherwise('/leaderboard');
 
@@ -19,7 +24,7 @@ angular.module('app', ['ui.router', 'firebase'])
 
   .filter('ZeroToE', function() {
     return function(input) {
-      if (input === undefined) {
+      if (input === undefined || input === null) {
 				return '';
 			} else if (input == 0) {
 				return 'E';

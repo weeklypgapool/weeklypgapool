@@ -26,3 +26,16 @@
 	margin-top: -5px;
 	border-radius: 3px
 }
+
+.add-part-btn {
+	margin-top: -10px;
+	margin-bottom: 15px
+}
+
+.rem-part-btn {
+	margin-top: -2px
+}
+
+.pool-pos {
+	margin-top: -5px
+}

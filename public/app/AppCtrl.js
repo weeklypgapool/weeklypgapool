@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-	.controller('appCtrl', ['$rootScope', '$scope', '$location', '$firebase', function ($rootScope, $scope, $location, $firebase) {
+	.controller('appCtrl', ['$rootScope', '$scope', '$location', '$firebase', '$filter', function ($rootScope, $scope, $location, $firebase, $filter) {
 
 		var refStats = new Firebase("https://weeklypgapool.firebaseio.com/tournaments/current/data/stats");
 		var refLeaderboard = new Firebase("https://weeklypgapool.firebaseio.com/tournaments/current/data/leaderboard");
@@ -27,7 +27,12 @@ angular.module('app')
 				});
 			});
 			$rootScope.leaderboard.$watch(function (evt) {
-				var playerName = $rootScope.leaderboard[evt.key].name;
+				var playerName = $rootScope.leaderboard[evt.key];
+				if (playerName) {
+					playerName = playerName.name;
+				} else {
+					return;
+				}
 				// Recalc each participant with player
 				_.forEach($rootScope.participants, function (participant, idx) {
 					if (participant.players[playerName]) {
@@ -47,10 +52,14 @@ angular.module('app')
 				return 'Final Results';
 			} else if (!$rootScope.tourneyStats.is_started) {
 				return 'Tournament Has Not Yet Started';
+			} else if ($rootScope.tourneyStats.round_state === 'Groupings Official') {
+				return 'Groupings are Official';
+			} else if ($rootScope.tourneyStats.round_state === 'Suspended') {
+				return 'Round ' + $rootScope.tourneyStats.current_round + ' - Suspended';
 			} else if ($rootScope.tourneyStats.round_state === 'Official') {
-				return 'Round ' + $rootScope.tourneyStats.current_round + ' (completed)';
+				return 'Round ' + $rootScope.tourneyStats.current_round + ' - Completed';
 			} else {
-				return 'Round ' + $rootScope.tourneyStats.current_round + ' as of ' + $filter('date')($rootScope.tourneyStats.last_updated, 'hh:mm a') + ' local event time (updates automatically)';
+				return 'Round ' + $rootScope.tourneyStats.current_round + ' as of ' + $filter('date')($rootScope.tourneyStats.last_updated, 'h:mm a') + ' local event time';
 			}
 		};
 		
@@ -58,12 +67,17 @@ angular.module('app')
 			if ($location.path().substr(0, path.length) === path) {
 				return "btn-primary";
 			} else {
-				return "";
+				return "btn-default";
 			}
 		};
 		
 		$scope.lookupMoney = function (playerName) {
-			return _.find($rootScope.leaderboard, {'name': playerName}).money_event;
+			var player = _.find($rootScope.leaderboard, {'name': playerName});
+			if (player) {
+				return player.money_event;
+			} else {
+				return 0;
+			}
 		};
 		
 		// Participant Factory Override to add SumMoney property
