@@ -19,7 +19,8 @@
 						<td>{{player.name}}</td>
 						<td class="text-center">{{player.total | ZeroToE}}</td>
 						<td class="text-center" ng-show="player.today !== undefined">{{player.today | ZeroToE}}</td>
-						<td class="text-center text-muted" ng-show="player.today === undefined"><small>{{player.tee_times[tourneyStats.current_round] | date:'h:mm a'}}</small></td>
+						<td class="text-center text-muted" ng-show="player.today === undefined  && player.current_position === ''">&nbsp;</td>
+						<td class="text-center text-muted" ng-show="player.today === undefined  && player.current_position !== ''"><small>{{player.tee_times[tourneyStats.current_round] | date:'h:mm a'}}</small></td>
 						<td class="text-center">{{player.thru}}</td>
 						<td class="text-center">{{player.money_event | number:0}}</td>
 					</tr>
