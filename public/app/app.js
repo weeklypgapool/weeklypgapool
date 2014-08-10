@@ -13,10 +13,10 @@ angular.module('app', ['ui.router', 'firebase'])
 				url: '/pool',
 				templateUrl: 'app/pool/pool.html'
 			})
-			.state('admin', {
-				url: '/admin',
-				templateUrl: 'app/admin/admin.html',
-				controller: 'adminCtrl'
+			.state('participants', {
+				url: '/participants',
+				templateUrl: 'app/participants/participants.html',
+				controller: 'participantsCtrl'
 			});
 		$urlRouterProvider.otherwise('/pool');
 

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-	.controller('adminCtrl', ['$rootScope', '$scope', '$firebase', '$filter', function ($rootScope, $scope, $firebase, $filter) {
+	.controller('participantsCtrl', ['$rootScope', '$scope', '$firebase', '$filter', function ($rootScope, $scope, $firebase, $filter) {
 		
 		$scope.form = {};
 		$scope.input = {};
