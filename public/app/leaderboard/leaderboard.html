@@ -1,10 +1,10 @@
 <div class="panel panel-default">
-  <div class="panel-heading">
-    <div class="panel-title"><h5>{{tourneyStats.tournament_name}}<br><small>LEADERBOARD - {{roundStatusDisplay()}}<span class="pull-right">(updates are automatic)</span></small></h5></div>
-  </div>
-  <div class="panel-body">
-    <div class="table-responsive">
-  		<table class="table table-condensed table-striped">
+	<div class="panel-heading">
+		<div class="panel-title"><h5>{{tourneyStats.tournament_name}}<br><small>LEADERBOARD - {{roundStatusDisplay()}}<span class="pull-right" ng-show="displayUpdatesMsgFlag()">(updates are automatic)</span></small></h5></div>
+	</div>
+	<div class="panel-body">
+		<div class="table-responsive">
+			<table class="table table-condensed table-striped">
 				<thead>
 					<th class="text-center">Pos</th>
 					<th>Player</th>
@@ -18,16 +18,18 @@
 						<td class="text-center">{{player.current_position}}</td>
 						<td>{{player.name}}</td>
 						<td class="text-center">{{player.total | ZeroToE}}</td>
-						<td class="text-center" ng-show="player.today !== undefined">{{player.today | ZeroToE}}</td>
-						<td class="text-center text-muted" ng-show="player.today === undefined  && player.current_position === ''">&nbsp;</td>
-						<td class="text-center text-muted" ng-show="player.today === undefined  && player.current_position !== ''"><small>{{player.tee_times[tourneyStats.current_round] | date:'h:mm a'}}</small></td>
-						<td class="text-center">{{player.thru}}</td>
-						<td class="text-center">{{player.money_event | number:0}}</td>
+						<td class="text-center" ng-show="playingStatus(player) === 'playing'">{{player.today | ZeroToE}}</td>
+						<td class="text-center text-muted" ng-show="playingStatus(player) === 'out'">&nbsp;</td>
+						<td class="text-center text-muted" ng-show="playingStatus(player) === 'waiting'"><small>{{player.tee_times[tourneyStats.current_round] | date:'h:mm a'}}</small></td>
+						<td class="text-center" ng-show="player.thru == 0"></td>
+						<td class="text-center" ng-hide="player.thru == 0">{{player.thru}}</td>
+						<td class="text-center" ng-show="displayMoney()">{{player.money_event | number:0}}</td>
+						<td class="text-center" ng-hide="displayMoney()"></td>
 					</tr>
 				</tbody>
-  		</table>
+			</table>
 		</div>
-  </div>
+	</div>
 </div>
 
 

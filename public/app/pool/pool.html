@@ -1,6 +1,9 @@
-<h4>{{tourneyStats.tournament_name}}<br><small>POOL STANDINGS - {{roundStatusDisplay()}}<span class="pull-right">(updates are automatic)</span></small></h4>
+<h4>{{tourneyStats.tournament_name}}<br><small>POOL STANDINGS - {{roundStatusDisplay()}}<span class="pull-right" ng-show="displayUpdatesMsgFlag()">(updates are automatic)</span></small></h4>
 
-<div class="panel panel-default" ng-repeat="part in participants | orderBy:'-total_money'">
+
+<div class="well" ng-hide="participants.length">No Participants in Pool</div>
+
+<div class="panel panel-default" ng-repeat="part in participants track by part.$id | orderBy:'-total_money'">
 	<div class="panel-heading">
 		<h4><span class="text-muted">{{$index+1}}</span>&nbsp;&nbsp;{{part.$id}}<span class="pull-right bg-success participant-money">${{part.total_money | number:0}}</span></h4>
 	</div>

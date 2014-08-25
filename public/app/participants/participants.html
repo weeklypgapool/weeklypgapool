@@ -1,45 +1,66 @@
 <!-- Add Participant Modal -->
-<div class="modal fade" id="new-player-modal">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" ng-click="clearForm()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+<script type="text/ng-template" id="addPartModalContent.html">
+		<div class="modal-header">
 				<h4 class="modal-title">Add Participant</h4>
-			</div>
-			<div class="modal-body">
-				<form name="form.addPart" novalidate role="form">
+		</div>
+		<div class="modal-body">
+				<form name="form" novalidate role="form">
 					<div class="form-group">
-					  <input type="text" name="name" data-ng-model="input.name" class="form-control" placeholder="Participant's Name (nickname, whatever...)" required />
-					</div>
-					<div class="form-group">
-					  <input type="email" name="email" data-ng-model="input.email" class="form-control" placeholder="Participant's Email (optional)" />
+					  <input type="text" name="name" ng-model="name" id="name" autofocus="" class="form-control" placeholder="Participant's Name" required/>
 					</div>
 				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal" ng-click="clearForm()">Cancel</button>
-				<button type="button" class="btn btn-primary btn-sm" ng-disabled="form.addPart.$invalid" ng-click="addParticipant()">&nbsp;&nbsp;Save&nbsp;&nbsp;</button>
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+		</div>
+		<div class="modal-footer">
+				<button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+				<button class="btn btn-primary" ng-click="angular.element('#name').focus();$close(name)">&nbsp;&nbsp;Add&nbsp;&nbsp;</button>
+		</div>
+</script>
+
+<!-- Confirm Remove Participant Modal -->
+<script type="text/ng-template" id="removePartModal.html">
+		<div class="modal-body">
+				<h4>Confirm Removal</h4>
+		</div>
+		<div class="modal-footer">
+				<button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+				<button class="btn btn-danger" ng-click="$close('remove')">Remove</button>
+		</div>
+</script>
+
+<!-- Confirm Remove All Participants Modal -->
+<script type="text/ng-template" id="removeAllPartModal.html">
+		<div class="modal-body">
+				<h4>Confirm Removal</h4>
+		</div>
+		<div class="modal-footer">
+				<button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+				<button class="btn btn-danger" ng-click="$close('remove')">Remove</button>
+		</div>
+</script>
 
 <div class="row">
 	<div class="col-xs-12">
 		<!-- Button trigger modal -->
-		<button class="btn btn-sm btn-success add-part-btn" data-toggle="modal" data-target="#new-player-modal">
+		<button class="btn btn-sm btn-success add-part-btn" ng-click="openModal('sm')">
 			<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;Add Participant</button>
+		<button class="btn btn-sm btn-danger add-part-btn" ng-show="participants.length > 1" ng-click="removeAll()">
+			<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;Remove All Participants</button>
 	</div>
 </div>
 <div class="row">
 	<div class="col-xs-12">
-		<div class="panel panel-default" ng-repeat="part in participants">
+		<div class="well" ng-hide="participants.length">No Participants</div>
+		<div class="panel panel-default" ng-show="participants.length" ng-repeat="part in participants" id="{{replaceSpaces(part.$id)}}">
 			<div class="panel-heading">
-				<h4>{{part.$id}}<button class="btn btn-xs btn-danger pull-right rem-part-btn">
-					<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;Remove</button></h4>
+				<h4>{{part.$id}}<button class="btn btn-xs btn-danger pull-right rem-part-btn"  ng-click="removePart(part)">
+					<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;Remove
+					</button></h4>
 			</div>
 			<div class="panel-body">
-				<div class="bg-info player-name" ng-repeat="(name, val) in part.players">{{name}} - ${{lookupMoney(name) | number:0}}</div>
+				<select ui-select2 multiple class="form-control" ng-model="selectedPlayers" ng-init="initSelect(this)" ng-change="onUpdate(this)" data-placeholder="Choose players...">
+					<option ng-repeat="player in playerList" value="{{player}}">{{player}}</option>
+				</select>
+
 			</div>
 		</div>
 	</div>

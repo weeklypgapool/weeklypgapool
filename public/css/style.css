@@ -39,3 +39,7 @@
 .pool-pos {
 	margin-top: -5px
 }
+
+.chosen-container-multi .chosen-choices li.search-field input[type=text] {
+	margin: 6px 0;
+}
