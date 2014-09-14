@@ -1,8 +1,12 @@
 'use strict';
 
 angular.module('app')
-	.controller('participantsCtrl', ['$rootScope', '$scope', '$timeout', '$modal', 'PgaDataService', function ($rootScope, $scope, $timeout, $modal, PgaDataService) {
-	
+	.controller('participantsCtrl', ['$scope', '$timeout', '$modal', 'ParticipantDataService', 'playerList', function ($scope, $timeout, $modal, ParticipantDataService, playerList) {
+
+		$scope.refParticipants = ParticipantDataService.refParticipants;
+		$scope.participants = ParticipantDataService.participants;
+		$scope.playerList = playerList;
+
 		$scope.initSelect = function (sel) {
 			sel.selectedPlayers = [];
 			_.forIn(sel.part.players, function (val, key) {
@@ -16,7 +20,7 @@ angular.module('app')
 				obj[player] = true;
 			});
 			var child = sel.part.$id + '/players';
-			PgaDataService.refParticipants.child(child).set(obj);
+			$scope.refParticipants.child(child).set(obj);
 		};
 		
 		$scope.removePart = function (part) {
@@ -26,7 +30,7 @@ angular.module('app')
 			});
 			modalInst.result.then(function (result) {
 				if (result === 'remove') {
-					PgaDataService.refParticipants.child(part.$id).remove();
+					$scope.refParticipants.child(part.$id).remove();
 				}
 			});
 		};
@@ -38,7 +42,7 @@ angular.module('app')
 			});
 			modalInst.result.then(function (result) {
 				if (result === 'remove') {
-					PgaDataService.refParticipants.remove();
+					$scope.refParticipants.remove();
 				}
 			});
 		};
@@ -46,7 +50,7 @@ angular.module('app')
 		$scope.replaceSpaces = function (input) {
 			return input.replace(/ /g, '-');
 		};
-		
+		// 
 		/* Add Participants */
 		$scope.openModal = function (size) {
 			var modalInst = $modal.open({
@@ -59,12 +63,14 @@ angular.module('app')
 				}
 			});
 			modalInst.result.then(function (result) {
-				result = $scope.replaceSpaces(result.replace(/[|&;:$%@"'<>()+,.]/g, ''));
-				PgaDataService.refParticipants.child(result).set(
+				// result = $scope.replaceSpaces(result.replace(/[|&;:$%@"'<>()+,.]/g, ''));
+				result = result.replace(/[|&;:$%@"'<>()+,.]/g, '');
+				$scope.refParticipants.child(result).set(
 					{'added': Date.now()}
 				);
 				$timeout(function () {
-					var top = angular.element('#' + result).position().top;
+					// result = $scope.removeSpaces(result);
+					var top = angular.element('#' + $scope.replaceSpaces(result)).position().top;
 					angular.element(window).scrollTop(top + 40);
 				}, 700);
 			});

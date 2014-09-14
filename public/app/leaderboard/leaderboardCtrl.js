@@ -1,12 +1,14 @@
 'use strict';
 
 angular.module('app')
-	.controller('leaderboardCtrl', ['$rootScope', '$scope', '$filter', 'PgaDisplayService', function ($rootScope, $scope, $filter, PgaDisplayService) {
+	.controller('leaderboardCtrl', ['$scope', '$filter', 'LeaderboardDataService', 'PgaDisplayService', function ($scope, $filter, LeaderboardDataService, PgaDisplayService) {
 		
+		$scope.tourneyStats = LeaderboardDataService.tourneyStats;
+		$scope.leaderboard = LeaderboardDataService.leaderboard;
 		$scope.roundStatusDisplay = PgaDisplayService.roundStatusDisplay;
 		
 		$scope.displayMoney = function () {
-			return ($rootScope.tourneyStats.round_state !== 'Groupings Official');
+			return ($scope.tourneyStats.round_state !== 'Groupings Official');
 		};
 		
 		$scope.playingStatus = function (player) {

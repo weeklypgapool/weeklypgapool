@@ -1,6 +1,11 @@
 'use strict';
 
-angular.module('app', ['ui.router', 'firebase', 'ui.bootstrap', 'ui.select2'])
+angular.module('app', [
+	'ui.router', 
+	'firebase', 
+	'ui.bootstrap', 
+	'ui.select2'
+])
 	
 .constant('constants',
 	{
@@ -30,24 +35,17 @@ angular.module('app', ['ui.router', 'firebase', 'ui.bootstrap', 'ui.select2'])
 				url: '/participants',
 				templateUrl: 'app/participants/participants.html',
 				controller: 'participantsCtrl',
-				authRequired: true
+				authRequired: true,
+				resolve: {
+					playerList: ['LeaderboardDataService', function(LeaderboardDataService) {
+							return LeaderboardDataService.playerList;
+					}]
+				}
 			})
 		;
-		$urlRouterProvider.otherwise('/pool');
+		$urlRouterProvider.otherwise('/leaderboard');
 
 	}])
-
-  .filter('ZeroToE', function () {
-    return function (input) {
-      if (input === undefined || input === null) {
-				return '';
-			} else if (input === 0) {
-				return 'E';
-			} else {
-				return input;
-			}
-    };
-  })
 
 	.run(['$rootScope', '$state', '$stateParams', '$firebaseSimpleLogin', 'constants',
     function ($rootScope, $state, $stateParams, $firebaseSimpleLogin, constants) {
