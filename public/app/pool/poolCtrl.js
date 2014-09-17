@@ -1,12 +1,16 @@
-'use strict';
+(function () {
 
-angular.module('app')
+	'use strict';
+	
+	angular.module('app')
 
-	.controller('poolCtrl', ['$scope', 'LeaderboardDataService', 'ParticipantDataService', 'PgaDisplayService', 'MoneyCalcService', function ($scope, LeaderboardDataService, ParticipantDataService, PgaDisplayService, MoneyCalcService) {
-		
-		$scope.tourneyStats = LeaderboardDataService.tourneyStats;
-		$scope.participants = ParticipantDataService.participants;
-		$scope.lookupMoney = MoneyCalcService.lookupMoney;
-		$scope.roundStatusDisplay = PgaDisplayService.roundStatusDisplay;
+		.controller('PoolCtrl', ['$scope', 'LeaderboardDataService', 'ParticipantDataService', 'PgaDisplayService', 'MoneyCalcService', function ($scope, LeaderboardDataService, ParticipantDataService, PgaDisplayService, MoneyCalcService) {
 
-	}]);
+			$scope.tourneyStats = LeaderboardDataService.tourneyStats;
+			$scope.participants = ParticipantDataService.participants;
+			$scope.lookupMoney = MoneyCalcService.lookupMoney;
+			$scope.roundStatusDisplay = PgaDisplayService.roundStatusDisplay;
+
+		}]);
+
+})();
