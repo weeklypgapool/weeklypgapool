@@ -16,9 +16,9 @@
 					return 'Round ' + LeaderboardDataService.tourneyStats.current_round + ' - Suspended';
 				} else if (LeaderboardDataService.tourneyStats.round_state === 'Official' || LeaderboardDataService.tourneyStats.round_state === 'Final') {
 					return 'Round ' + LeaderboardDataService.tourneyStats.current_round + ' - Completed';
-				} else if (LeaderboardDataService.tourneyStats.current_round === '4'
-						   && (LeaderboardDataService.tourneyStats.round_state === 'Official'
-						   || LeaderboardDataService.tourneyStats.round_state === 'Final')) {
+				} else if (LeaderboardDataService.tourneyStats.current_round === '4' &&
+					(LeaderboardDataService.tourneyStats.round_state === 'Official' ||
+					LeaderboardDataService.tourneyStats.round_state === 'Final')) {
 					return 'Final Results';
 				} else {
 					return '';
@@ -26,8 +26,9 @@
 			};
 
 			var displayUpdatesMsgFlag = function () {
-				return (LeaderboardDataService.tourneyStats.round_state !== 'Official' && LeaderboardDataService.tourneyStats.round_state !== 'Final'
-					&& LeaderboardDataService.tourneyStats.round_state !== 'Groupings Official');
+				return (LeaderboardDataService.tourneyStats.round_state !== 'Official' &&
+					LeaderboardDataService.tourneyStats.round_state !== 'Final' &&
+					LeaderboardDataService.tourneyStats.round_state !== 'Groupings Official');
 			};
 
 			return {
@@ -36,5 +37,5 @@
 			};
 
 		}]);
-	
+
 })();

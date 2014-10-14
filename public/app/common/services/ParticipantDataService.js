@@ -1,7 +1,7 @@
 (function () {
 
 	'use strict';
-	
+
 	angular.module('app')
 
 		.factory('ParticipantDataService', ['$firebase', 'constants', 'MoneyCalcService', function ($firebase, constants, MoneyCalcService) {
@@ -21,5 +21,5 @@
 			};
 
 		}]);
-	
+
 })();

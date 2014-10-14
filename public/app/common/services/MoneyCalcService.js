@@ -1,7 +1,7 @@
 (function () {
 
 	'use strict';
-	
+
 	angular.module('app')
 
 		.factory('MoneyCalcService', ['$injector', function ($injector) {
@@ -9,7 +9,7 @@
 			var LeaderboardDataService, ParticipantDataService;
 
 			function calcTotalMoneyForParticipants() {
-				if (!ParticipantDataService) { Init(); }
+				if (!ParticipantDataService) { init(); }
 				_(ParticipantDataService.participants).forEach(function (participant, idx) {
 					var sumMoney = 0;
 					_(participant.players).forEach(function (val, name) {
@@ -20,7 +20,7 @@
 			}
 
 			function lookupMoney(playerName) {
-				if (!LeaderboardDataService) { Init(); }
+				if (!LeaderboardDataService) { init(); }
 				var player = _.find(LeaderboardDataService.leaderboard, {'name': playerName});
 				if (player) {
 					return player.money_event || 0;
@@ -31,7 +31,7 @@
 
 			// Private functions
 
-			function Init() {
+			function init() {
 				//  Use $injector to overcome circular ref issue
 				LeaderboardDataService = $injector.get('LeaderboardDataService');
 				ParticipantDataService = $injector.get('ParticipantDataService');
@@ -43,5 +43,5 @@
 			};
 
 		}]);
-	
+
 })();
