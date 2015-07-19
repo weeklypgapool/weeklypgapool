@@ -16,7 +16,7 @@
 				<tbody>
 					<tr ng-repeat="player in leaderboard track by player.name">
 						<td class="text-center">{{player.current_position}}</td>
-						<td>{{player.name}}</td>
+						<td>{{player.name}}<span ng-show="player.is_amateur">&nbsp;(a)</span></td>
 						<td class="text-center">{{player.total | ZeroToE}}</td>
 						<td class="text-center" ng-show="playingStatus(player) === 'playing'">{{player.today | ZeroToE}}</td>
 						<td class="text-center text-muted" ng-show="playingStatus(player) === 'out'">&nbsp;</td>
