@@ -32,6 +32,11 @@
 					templateUrl: 'app/pool/pool.html',
 					controller: 'PoolCtrl'
 				})
+				.state('popularity', {
+					url: '/popularity',
+					templateUrl: 'app/popularity/popularity.html',
+					controller: 'PopularityCtrl'
+				})
 				.state('participants', {
 					url: '/participants',
 					templateUrl: 'app/participants/participants.html',

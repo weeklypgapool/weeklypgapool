@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="well"><h4>Player Popularity</h4></div>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div ng-repeat="player in histogram">
+          <h4>{{player.player}}</h4>
+          <div class="progress">
+            <div class="progress-bar progress-bar-info" role="progressBar"
+              style="width:{{player.count/histogram[0].count*100}}%;">
+              {{player.count}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
