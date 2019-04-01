@@ -41,7 +41,7 @@
 					url: '/participants',
 					templateUrl: 'app/participants/participants.html',
 					controller: 'ParticipantsCtrl',
-					authRequired: true,
+					authRequired: false,
 					resolve: {
 						playerList: ['LeaderboardDataService',
 							function(LeaderboardDataService) {
@@ -57,19 +57,19 @@
 
 	.run(['$rootScope', '$state', '$stateParams', '$firebaseSimpleLogin', 'constants',
 		function($rootScope, $state, $stateParams, $firebaseSimpleLogin, constants) {
-			var auth = $firebaseSimpleLogin(new Firebase(constants.baseRefUrl));
-			auth.$getCurrentUser().then(function(data) {
-				$rootScope.authObj = auth;
+			// var auth = $firebaseSimpleLogin(new Firebase(constants.baseRefUrl));
+			// auth.$getCurrentUser().then(function(data) {
+				// $rootScope.authObj = auth;
 				$rootScope.$on('$stateChangeStart', function(event, toState, toStateParams) {
 					// track the state the user wants to go to; authorization service needs this
 					$rootScope.toStateParams = toStateParams;
-					if (toState.authRequired && $rootScope.authObj.user === null) {
-						$rootScope.toState = toState.name;
-						$state.go('login');
-						event.preventDefault();
-					}
+					// if (toState.authRequired && $rootScope.authObj.user === null) {
+						// $rootScope.toState = toState.name;
+						// $state.go('login');
+						// event.preventDefault();
+					// }
 				});
-			});
+			// });
 		}
 	]);
 
